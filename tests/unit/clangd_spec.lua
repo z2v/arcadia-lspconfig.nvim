@@ -101,6 +101,26 @@ describe('clangd workflow', function()
     helpers.cleanup(root)
   end)
 
+  it('appends custom arguments to checkout-local clangd', function()
+    api.options = { servers = { clangd = { args = { '--log=error', '--background-index' } } } }
+    local workflow = require 'arcadia-lspconfig.servers.clangd'(api)
+
+    assert.is_true(workflow.activate(bufnr))
+    assert.are.same(
+      { root .. '/ya', 'tool', 'clangd', '--log=error', '--background-index' },
+      patches[1].cmd
+    )
+    assert.are.same({ '--log=error', '--background-index' }, api.options.servers.clangd.args)
+  end)
+
+  it('keeps the default command with an empty argument list', function()
+    api.options = { servers = { clangd = { args = {} } } }
+    local workflow = require 'arcadia-lspconfig.servers.clangd'(api)
+
+    assert.is_true(workflow.activate(bufnr))
+    assert.are.same({ root .. '/ya', 'tool', 'clangd' }, patches[1].cmd)
+  end)
+
   it('runs dump and make in parallel and reloads for both successes', function()
     local workflow = require 'arcadia-lspconfig.servers.clangd'(api)
 

@@ -3,7 +3,7 @@ local Runtime = {}
 ---@class ArcadiaLspServerDefinition
 ---@field name string
 ---@field default_options table
----@field allowed_options table<string, string>
+---@field allowed_options table<string, string|fun(value: any): boolean>
 ---@field route_commands? boolean
 ---@field auto_enable? boolean
 ---@field config? vim.lsp.Config
@@ -61,7 +61,9 @@ local function validate_definitions(definitions)
       vim.validate(
         ('server definition %s.allowed_options.%s'):format(definition.name, option),
         expected_type,
-        'string'
+        function(value)
+          return type(value) == 'string' or type(value) == 'function'
+        end
       )
     end
     vim.validate(

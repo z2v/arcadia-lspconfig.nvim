@@ -79,7 +79,10 @@ return function(api)
     if state.command_configured then
       return
     end
-    api.config.extend(state.lsp_root, SERVER, { cmd = { state.ya_path, 'tool', 'clangd' } })
+    local options = api.options and api.options.servers and api.options.servers[SERVER] or {}
+    local cmd = { state.ya_path, 'tool', 'clangd' }
+    vim.list_extend(cmd, options.args or {})
+    api.config.extend(state.lsp_root, SERVER, { cmd = cmd })
     state.command_configured = true
   end
 

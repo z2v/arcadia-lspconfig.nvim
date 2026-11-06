@@ -61,12 +61,26 @@ local function create_yamake(api)
   return require 'arcadia-lspconfig.servers.yamake'(dependencies)
 end
 
+---@param value any
+---@return boolean
+local function is_string_list(value)
+  if type(value) ~= 'table' or not vim.islist(value) then
+    return false
+  end
+  for _, item in ipairs(value) do
+    if type(item) ~= 'string' then
+      return false
+    end
+  end
+  return true
+end
+
 ---@type ArcadiaLspServerDefinition[]
 return {
   {
     name = 'clangd',
     default_options = { codegen = true },
-    allowed_options = { codegen = 'boolean' },
+    allowed_options = { codegen = 'boolean', args = is_string_list },
     create = create_clangd,
   },
   {

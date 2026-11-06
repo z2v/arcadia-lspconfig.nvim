@@ -10,6 +10,20 @@ describe('setup', function()
       plugin.setup { servers = { clangd = { codegen = 'no' } } }
     end, 'servers.clangd.codegen: expected boolean, got string')
 
+    for _, args in ipairs {
+      '--log=error',
+      false,
+      42,
+      { '--log=error', false },
+      { flag = '--log=error' },
+      { [2] = '--log=error' },
+    } do
+      assert.has_error(function()
+        plugin.setup { servers = { clangd = { args = args } } }
+      end)
+      assert.is_false(plugin._state().configured)
+    end
+
     plugin.setup {
       servers = { clangd = false, pyright = { codegen = false } },
       log = { level = 'off' },

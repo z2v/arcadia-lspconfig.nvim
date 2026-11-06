@@ -78,6 +78,12 @@ servers.clangd ~
     Set to false to disable this plugin's clangd integration. Set codegen to
     false to skip the ya make --replace-result stage while continuing to
     generate compile_commands.json. codegen defaults to true.
+    args is an optional list of strings appended to <arcadia-root>/ya tool
+    clangd. Omitting it or using {} adds no arguments. Example: >lua
+      servers = {
+        clangd = { codegen = true, args = { '--log=error' } },
+      }
+<
 
                                       *arcadia-lspconfig-servers-pyright*
 servers.pyright ~

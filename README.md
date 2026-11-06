@@ -58,6 +58,17 @@ Set `servers.clangd.codegen = false` to skip the `ya make` codegen stage.
 
 After that, LSP server is restarted.
 
+Set `servers.clangd.args` to a list of strings to append arguments to
+`<arcadia-root>/ya tool clangd`. It is optional and adds no arguments by default:
+
+```lua
+require('arcadia-lspconfig').setup({
+  servers = {
+    clangd = { codegen = true, args = { '--log=error' } },
+  },
+})
+```
+
 Both `compile_commands.json` and codegen results are stored in `~/.local/share/nvim/arcadia-lspconfig/<hash>/clangd/`.
 
 ## Python
